@@ -48,20 +48,39 @@
         <script id="entry-template" type="text/x-handlebars-template">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title">{{ deceasedName }}</h3>
+                        <h3 class="panel-title">HeirShare for {{ deceasedName }}</h3>
                     </div>
                     <div class="panel-body">
                         <form role="form">
                         <div class="form-group">
-                            <label>Was {{ deceasedName }} married at death?</label>
-                            <select class="form-control married">
+                            <label>Was the deceased married at death?</label>
+                            <select class="form-control select boolean trigger" name="married" data-next="{{ nextNode }}" data-multiple="false">
+                                <option value="">-- Select -- </option>
                                 <option value = "false">No</option>
-                                <option value = "true">True</option>
+                                <option value = "true">Yes</option>
                             </select>
                         </div>
                         </form>
                     </div>
                 </div>
+        </script>
+
+        <script id="boolean-template" type="text/x-handlebars-template">
+            <div class="form-group">
+                <label>{{ questionText }}</label>
+                <select class="form-control  trigger boolean" name="{{shortName}}" data-next="{{ nextNode }}" data-multiple="{{ multiple }}">
+                    <option value="">-- Select -- </option>
+                    <option value = "false">No</option>
+                    <option value = "true">Yes</option>
+                </select>
+            </div>
+        </script>
+
+        <script id="text-template" type="text/x-handlebars-template">
+            <div class="form-group">
+                <label>{{ questionText }} </label>
+                <input type="text" class="form-control" placeholder="{{ questionText }}" name="{{ shortName }}" data-next="{{ nextNode }}" data-multiple="{{ multiple }}" required>
+            </div>
         </script>
     </body>
 </html>
