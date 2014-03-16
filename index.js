@@ -7,10 +7,10 @@ var deceased = {
 
 //Abstracted questions
 var nodes = {
-    children : {type: 'text', shortName: 'children', question: 'Name of Child', goTo: 'children', multi: true},
-    parnt : {type: 'text', shortName: 'parent', question: 'Name of parent', goTo: 'parnt', multi: true},
-    sibling : {type: 'text', shortName: 'sibling', question : 'Name of sibling', goTo: 'sibling', multi: true},
-    married : {type: 'boolean', shortName: 'married', question : 'Was the  deceased married at time of death?', goToTrue: 'children', goToFalse: 'children', multi: false},
+    children : {type: 'multi', shortName: 'children', question: 'Name of Child', goTo: 'children', goToTrue: 'children', goToFalse: 'haveParnt'},
+    parnt : {type: 'multi', shortName: 'parent', question: 'Name of parent', goTo: 'parnt'},
+    sibling : {type: 'multi', shortName: 'sibling', question : 'Name of sibling', goTo: 'sibling'},
+    married : {type: 'boolean', shortName: 'married', question : 'Was the  deceased married at time of death?', goToTrue: 'haveChildren', goToFalse: 'haveChildren', multi: false},
     haveChildren : {type: 'boolean', shortName: 'haveChildren', question : 'Did the deceased have children?', goToTrue: 'children', goToFalse: 'haveParnt', multi: false},
     haveParnt : {type: 'boolean', shortName: 'haveParnt', question : 'Did the deceased have any living parents?', goToTrue: 'parnt', goToFalse: 'haveSiblings', multi: false},
     haveSiblings : {type: 'boolean', shortName: 'haveSiblings', question : 'Did the deceased have living or predeceased siblings?', goToTrue: 'sibling', goToFalse: 'sibling', multi: false}
@@ -42,17 +42,32 @@ $('.app-content').on('change', '.trigger', function () {
     //Proceed to next question
     var nextNode = $(this).attr('data-next');
     var nextq;
+    var qtype;
     if ($(this).hasClass('boolean')){
-        $(this).val() === 'true'? nextq = nodes[nextNode].goToTrue : nextq = nodes[nextNode].goToFalse;
+        if ($(this).val() === 'true'){
+            nextq = nodes[prop].goToTrue;
+            qtype= nodes[nextq].type;
+        } else {
+            nextq = nodes[prop].goToFalse;
+            qtype= nodes[nextq].type;
+        }
     } else {
         nextq = nodes[nextNode].goTo;
+        qtype = nodes[nextq].type;
     }
-    var source = $('#' + nodes[nextNode].type + '-template').html();
+    var source = $('#' + qtype + '-template').html();
     var template = Handlebars.compile(source);
     $('form').append(template({
-        questionText: nodes[nextNode].question,
-        shortName: nodes[nextNode].shortName,
+        questionText: nodes[nextq].question,
+        shortName: nodes[nextq].shortName,
         nextNode: nextq
     }));
     console.log(deceased);
+});
+
+$('.app-content').on('keypress', '.form-group input', function (e) {
+    if(e.which === 13) {
+        e.preventDefault();
+        $('.trigger').trigger('change');
+    }
 });

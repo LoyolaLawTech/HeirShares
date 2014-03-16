@@ -11,6 +11,7 @@
 
         <link rel="stylesheet" href="public/bower_components/normalize.css/normalize.css"> 
         <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="main.css"> 
         <script src="public/bower_components/modernizr/modernizr.js"></script>
     </head>
     <body>
@@ -79,7 +80,14 @@
         <script id="text-template" type="text/x-handlebars-template">
             <div class="form-group">
                 <label>{{ questionText }} </label>
-                <input type="text" class="form-control" placeholder="{{ questionText }}" name="{{ shortName }}" data-next="{{ nextNode }}" data-multiple="{{ multiple }}" required>
+                <input type="text" class="form-control" placeholder="{{ questionText }}" name="{{ shortName }}" data-next="{{ nextNode }}" data-multiple="false" required>
+            </div>
+        </script>
+        <script id="multi-template" type="text/x-handlebars-template">
+            <div class="form-group multi-input">
+                <label>{{ questionText }} </label>
+                <input type="text" class="form-control" placeholder="{{ questionText }}" name="{{ shortName }}" data-next="{{ nextNode }}" data-multiple="true" required>
+                <button>Add</button>
             </div>
         </script>
     </body>
