@@ -1,5 +1,9 @@
 //Create the deceased object
 var deceased = {
+    name: null,
+    isMarried: null,
+    haveChildren: null,
+    haveParnt: null,
     children: {},
     parents: {},
     siblings: {}
@@ -16,6 +20,36 @@ var nodes = {
     haveSiblings : {type: 'boolean', shortName: 'haveSiblings', question : 'Did the deceased have living or predeceased siblings?', goToTrue: 'sibling', goToFalse: 'sibling', multi: false}
 };
 
+var buildObject = function(el,callback){
+
+    var prop = el.attr('name'),
+    nextNode = el.attr('data-next'),
+    data = {};
+
+    //Add data to our object
+    if (el.attr('data-mulitple') === 'true'){
+        var key = Math.floor((Math.random()*100)+1);
+        deceased[prop][key] = $(this).val();
+    } else {
+        deceased[prop] = el.val();
+    }
+
+    //Proceed to next question
+    if (el.hasClass('boolean')){
+        if (el.val() === 'true'){
+            data.nextq = nodes[prop].goToTrue;
+            data.qtype= nodes[data.nextq].type;
+        } else {
+            data.nextq = nodes[prop].goToFalse;
+            data.qtype= nodes[data.nextq].type;
+        }
+    } else {
+        data.nextq = nodes[nextNode].goTo;
+        data.qtype = nodes[data.nextq].type;
+    }
+
+    callback(data);
+};
 
 $('.heir-start').click(function (e) {
     e.preventDefault();
@@ -27,47 +61,36 @@ $('.heir-start').click(function (e) {
 });
 
 $('.app-content').on('change', '.trigger', function () {
-
-    var prop = $(this).attr('name');
-
-    //Add data to our object
-    if ($(this).attr('data-mulitple') === 'true'){
-        var key = Math.floor((Math.random()*100)+1);
-        deceased[prop][key] = $(this).val();
-
-    } else {
-        deceased[prop] = $(this).val();
-    }
-
-    //Proceed to next question
-    var nextNode = $(this).attr('data-next');
-    var nextq;
-    var qtype;
-    if ($(this).hasClass('boolean')){
-        if ($(this).val() === 'true'){
-            nextq = nodes[prop].goToTrue;
-            qtype= nodes[nextq].type;
-        } else {
-            nextq = nodes[prop].goToFalse;
-            qtype= nodes[nextq].type;
-        }
-    } else {
-        nextq = nodes[nextNode].goTo;
-        qtype = nodes[nextq].type;
-    }
-    var source = $('#' + qtype + '-template').html();
-    var template = Handlebars.compile(source);
-    $('form').append(template({
-        questionText: nodes[nextq].question,
-        shortName: nodes[nextq].shortName,
-        nextNode: nextq
-    }));
-    console.log(deceased);
+    buildObject($(this), function (data) {
+        var source = $('#' + data.qtype + '-template').html();
+        var template = Handlebars.compile(source);
+        $('form').append(template({
+            questionText: nodes[data.nextq].question,
+            shortName: nodes[data.nextq].shortName,
+            nextNode: data.nextq
+        }));
+        console.log(deceased);
+    });
 });
 
 $('.app-content').on('keypress', '.form-group input', function (e) {
     if(e.which === 13) {
         e.preventDefault();
-        $('.trigger').trigger('change');
+        $('.stop-adding').remove();
+        buildObject($(this), function (data) {
+            var source = $('#' + data.qtype + '-template').html();
+            var template = Handlebars.compile(source);
+            $('form').append(template({
+                questionText: nodes[data.nextq].question,
+                shortName: nodes[data.nextq].shortName,
+                nextNode: data.nextq
+            }));
+            console.log(deceased);
+        });
     }
+});
+
+$('.app-content').on('click', '.stop-adding', function (e){
+    e.preventDefault();
+    alert('stop');
 });
