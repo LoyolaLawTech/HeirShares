@@ -83,11 +83,32 @@
                 <input type="text" class="form-control" placeholder="{{ questionText }}" name="{{ shortName }}" data-next="{{ nextNode }}" data-multiple="false" required>
             </div>
         </script>
+
         <script id="multi-template" type="text/x-handlebars-template">
             <div class="form-group multi-input">
                 <label>{{ questionText }} </label>
                 <input type="text" class="form-control" placeholder="{{ questionText }}" name="{{ shortName }}" data-next="{{ nextNode }}" data-multiple="true" required>
-                <button class="btn btn-danger stop-adding" data-next="{{ nextNode }}">I'm finished adding {{ shortName }}</button>
+                <button class="btn btn-danger stop-adding" name="{{ shortName }}" data-next="{{ nextNode }}">I'm finished adding {{ shortName }}</button>
+            </div>
+        </script>
+
+        <script id="next-template" type="text/x-handlebars-template">
+            <div class="form-group multi-input">
+                <button class="btn btn-info next-section" name="{{ shortName }}">{{ questionText }}</button>
+            </div>
+        </script>
+
+        <script id="details-template" type="text/x-handlebars-template">
+            <div class="form-group">
+                <div class="btn-group" data-toggle="buttons">
+                    <label>Was {{ personName }} a forced heir?</label>
+                    <label class="btn btn-primary">
+                        <input type="radio" name="options" id="option1"> Yes
+                    </label>
+                    <label class="btn btn-primary">
+                        <input type="radio" name="options" id="option2"> No
+                    </label>
+                </div>
             </div>
         </script>
     </body>
