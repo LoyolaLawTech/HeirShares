@@ -98,18 +98,108 @@
             </div>
         </script>
 
-        <script id="details-template" type="text/x-handlebars-template">
+        <script id="children-properties-template" type="text/x-handlebars-template">
+            {{#each children}}
+            <fieldset>
+            <legend>About {{ deceasedName }}'s {{ personType }} {{ personName }}</legend>
             <div class="form-group">
+                <label>Was {{ personName }} a forced heir?</label>
                 <div class="btn-group" data-toggle="buttons">
-                    <label>Was {{ personName }} a forced heir?</label>
                     <label class="btn btn-primary">
                         <input type="radio" name="options" id="option1"> Yes
                     </label>
-                    <label class="btn btn-primary">
-                        <input type="radio" name="options" id="option2"> No
+                    <label class="btn btn-primary active">
+                        <input type="radio" name="options" id="option2" checked> No
                     </label>
                 </div>
             </div>
+            <div class="form-group">
+                <label>Did {{ personName }} renounce inheritance?</label>
+                <div class="btn-group" data-toggle="buttons">
+                    <label class="btn btn-primary">
+                        <input type="radio" name="options" id="option1"> Yes
+                    </label>
+                    <label class="btn btn-primary active">
+                        <input type="radio" name="options" id="option2" checked> No
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Did {{ personName }} predecease {{ deceasedName }}?</label>
+                <div class="btn-group" data-toggle="buttons">
+                    <label class="btn btn-primary">
+                        <input type="radio" name="options" id="option1"> Yes
+                    </label>
+                    <label class="btn btn-primary active">
+                        <input type="radio" name="options" id="option2" checked> No
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Was {{ personName }} disinherited by {{ deceasedName }}?</label>
+                <div class="btn-group" data-toggle="buttons">
+                    <label class="btn btn-primary">
+                        <input type="radio" name="options" id="option1"> Yes
+                    </label>
+                    <label class="btn btn-primary active">
+                        <input type="radio" name="options" id="option2" checked> No
+                    </label>
+                </div>
+            </div>
+            </fieldset>
+            {{/each}}
+        </script>
+
+        <script id="siblings-properties-template" type="text/x-handlebars-template">
+            {{#each siblings}}
+            <fieldset>
+            <legend>About {{ deceasedName }}'s {{ personType }} {{ personName }}</legend>
+            <div class="form-group">
+                <label>Did {{ personName }} and {{ deceasedName }} have one of the same parents or both of the same parents?</label>
+                <div class="btn-group" data-toggle="buttons">
+                    <label class="btn btn-primary">
+                        <input type="radio" name="options" id="option1"> Yes
+                    </label>
+                    <label class="btn btn-primary active">
+                        <input type="radio" name="options" id="option2" checked> No
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Did {{ personName }} renounce inheritance?</label>
+                <div class="btn-group" data-toggle="buttons">
+                    <label class="btn btn-primary">
+                        <input type="radio" name="options" id="option1"> Yes
+                    </label>
+                    <label class="btn btn-primary active">
+                        <input type="radio" name="options" id="option2" checked> No
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Did {{ personName }} predecease {{ deceasedName }}?</label>
+                <div class="btn-group" data-toggle="buttons">
+                    <label class="btn btn-primary">
+                        <input type="radio" name="options" id="option1"> Yes
+                    </label>
+                    <label class="btn btn-primary active">
+                        <input type="radio" name="options" id="option2" checked> No
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Was {{ personName }} disinherited by {{ deceasedName }}?</label>
+                <div class="btn-group" data-toggle="buttons">
+                    <label class="btn btn-primary">
+                        <input type="radio" name="options" id="option1"> Yes
+                    </label>
+                    <label class="btn btn-primary active">
+                        <input type="radio" name="options" id="option2" checked> No
+                    </label>
+                </div>
+            </div>
+            </fieldset>
+            {{/each}}
         </script>
     </body>
 </html>

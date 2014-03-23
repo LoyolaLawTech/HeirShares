@@ -12,7 +12,7 @@ var deceased = {
 //Set incrementor value for multiples
 var i = 0;
 
-//Abstracted questions
+//Abstracted family tree questions
 var nodes = {
     children : {type: 'multi', shortName: 'children', question: 'Name of Child', goTo: 'children', goToTrue: 'children', goToFalse: 'haveParnt'},
     parents : {type: 'multi', shortName: 'parents', question: 'Name of parent', goTo: 'parents', goToFalse: 'haveSiblings'},
@@ -64,8 +64,10 @@ var buildFamilyObject = function(el,callback){
     callback(returnData);
 };
 
-//Gets relevant status information for siblings/children
-var getFamilyDetails = function() {
+//Gets relevant properties for siblings and children
+var setFamilyProperties = function(callback) {
+
+    var people = [];
 
     if (Object.keys(deceased.siblings).length > 0){
         $.each(Object.keys(deceased.siblings), function (index, val){
@@ -85,9 +87,7 @@ var getFamilyDetails = function() {
         });
     }
 
-    if (Object.keys(deceased.parents).length > 0){
-        console.log('there are ' + Object.keys(deceased.parents).length + ' parents');
-    }
+    callback(deceased);
 };
 
 //Listeners
@@ -95,6 +95,7 @@ $('.heir-start').click(function (e) {
     e.preventDefault();
     var dName = $('#deceasedName').val();
     deceased.name = dName;
+    window.deceasedName = dName;
     var source   = $('#entry-template').html();
     var template = Handlebars.compile(source);
     $('.app-content').html(template({deceasedName: dName, nextNode: 'haveChildren'}));
@@ -127,7 +128,6 @@ $('.app-content').on('keypress', '.form-group input', function (e) {
                 shortName: nodes[data.nextq].shortName,
                 nextNode: data.nextq
             }));
-            console.log(deceased);
         });
     }
 });
@@ -148,5 +148,33 @@ $('.app-content').on('click', '.stop-adding', function (e){
 
 $('.app-content').on('click', '.next-section', function (e){
     e.preventDefault();
-    getFamilyDetails();
+    setFamilyProperties(function (deceased) {
+        $('form').children().remove();
+        var context = {},
+        source,
+        template;
+
+        if (Object.keys(deceased.children).length > 0){
+            context.children = [];
+            $.each(Object.keys(deceased.children), function (i,v){
+                context.children.push({personName: deceased.children[i].name, personType: 'child', deceasedName: window.deceasedName});
+
+            });
+            source = $('#children-properties-template').html();
+            template = Handlebars.compile(source);
+            $('form').append(template(context));
+        }
+
+        if (Object.keys(deceased.siblings).length > 0){
+            context.siblings = [];
+            $.each(Object.keys(deceased.siblings), function (i,v){
+                context.siblings.push({personName: deceased.siblings[i].name, personType: 'sibling', deceasedName: window.deceasedName});
+
+            });
+            console.log(context);
+            source = $('#siblings-properties-template').html();
+            template = Handlebars.compile(source);
+            $('form').append(template(context));
+        }
+    });
 });
