@@ -9,10 +9,26 @@ var deceased = {
     siblings: {}
 };
 
+//Child object
+var child = {
+    forcedHeir: false,
+    renounced: false,
+    predeceased: false,
+    disinherited: false
+};
+
+//Sibling Object
+var sibling = {
+    oneSameParent: false,
+    renounced: false,
+    predeceased: false,
+    unworthy: false
+};
+
 //Abstracted questions
 var nodes = {
     children : {type: 'multi', shortName: 'children', question: 'Name of Child', goTo: 'children', goToTrue: 'children', goToFalse: 'haveParnt'},
-    parnt : {type: 'multi', shortName: 'parent', question: 'Name of parent', goTo: 'parnt'},
+    parnt : {type: 'multi', shortName: 'parnt', question: 'Name of parent', goTo: 'parnt'},
     sibling : {type: 'multi', shortName: 'sibling', question : 'Name of sibling', goTo: 'sibling'},
     married : {type: 'boolean', shortName: 'married', question : 'Was the  deceased married at time of death?', goToTrue: 'haveChildren', goToFalse: 'haveChildren', multi: false},
     haveChildren : {type: 'boolean', shortName: 'haveChildren', question : 'Did the deceased have children?', goToTrue: 'children', goToFalse: 'haveParnt', multi: false},
@@ -20,16 +36,18 @@ var nodes = {
     haveSiblings : {type: 'boolean', shortName: 'haveSiblings', question : 'Did the deceased have living or predeceased siblings?', goToTrue: 'sibling', goToFalse: 'sibling', multi: false}
 };
 
+
+
 var buildObject = function(el,callback){
 
-    var prop = el.attr('name'),
-    nextNode = el.attr('data-next'),
-    data = {};
+    var prop = el.attr('name');
+    var nextNode = el.attr('data-next');
+    var returnData = {};
 
     //Add data to our object
-    if (el.attr('data-mulitple') === 'true'){
+    if (el.attr('data-multiple') === 'true'){
         var key = Math.floor((Math.random()*100)+1);
-        deceased[prop][key] = $(this).val();
+        deceased[prop][key] = el.val();
     } else {
         deceased[prop] = el.val();
     }
@@ -37,18 +55,18 @@ var buildObject = function(el,callback){
     //Proceed to next question
     if (el.hasClass('boolean')){
         if (el.val() === 'true'){
-            data.nextq = nodes[prop].goToTrue;
-            data.qtype= nodes[data.nextq].type;
+            returnData.nextq = nodes[prop].goToTrue;
+            returnData.qtype= nodes[returnData.nextq].type;
         } else {
-            data.nextq = nodes[prop].goToFalse;
-            data.qtype= nodes[data.nextq].type;
+            returnData.nextq = nodes[prop].goToFalse;
+            returnData.qtype= nodes[returnData.nextq].type;
         }
     } else {
-        data.nextq = nodes[nextNode].goTo;
-        data.qtype = nodes[data.nextq].type;
+        returnData.nextq = nodes[nextNode].goTo;
+        returnData.qtype = nodes[returnData.nextq].type;
     }
 
-    callback(data);
+    callback(returnData);
 };
 
 $('.heir-start').click(function (e) {
